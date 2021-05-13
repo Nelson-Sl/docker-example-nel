@@ -1,0 +1,8 @@
+<component name="libraryTable">
+  <library name="dockerexample-0.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../dockerexample/target/dockerexample-0.0.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

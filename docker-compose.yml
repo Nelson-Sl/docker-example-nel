@@ -1,0 +1,57 @@
+version: "3"
+services:
+  nginx: # nginx容器
+    build: # 指定上下文目录以及docker配置文件的相对路径
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports: # 主机的端口映射到nginx容器端口
+      - "8080:8080"
+    networks:
+      - frontend
+    depends_on:
+      - app
+      - mysql
+
+  app:
+    build:
+      context: ./docker-backend
+      dockerfile: Dockerfile
+    ports:
+      - 8090:8090
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hello_world?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: Nelson
+      SPRING_DATASOURCE_PASSWORD: Nelson
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    networks:
+      - backend
+      - frontend
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: '123456'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+      MYSQL_DATABASE: 'hello_world'
+      MYSQL_USER: 'Nelson'
+      MYSQL_PASSWORD: 'Nelson'
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - backend
+
+volumes:
+  mysql: {}
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
